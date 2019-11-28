@@ -17,13 +17,24 @@ public class ReversePrint {
 		// 5
 		Scanner sc = new Scanner(System.in);
 		
-		System.out.println("입력>>");
-		for (int i = 1 ; i <= 5 ; i++);
-			
-		sc.hasNextInt();
+		System.out.print("입력>>");
+
+		int num = sc.nextInt();
 		
-	
-	
+		for(int i = 1; i <=num;i++) {
+			
+			System.out.println(i);
+		}
+		System.out.println("=======================");
+		for(int i = 1 ; i <= num ; num--) {
+			System.out.println(num);
+		}
+		
+		
+		
+		
+			
+		
 	
 	
 	
