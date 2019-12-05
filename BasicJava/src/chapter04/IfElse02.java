@@ -28,12 +28,12 @@ public class IfElse02 {
 		// 파트2: 학점 등급 매기는 부분
 		String grade = "";//학점 등급
 		if (score >= 90 && score <= 100) {
-			if(score >=96) 
-			grade = "A+";
-		}else {
-			grade = "A";
-		}
-			if (score >= 80 && score > 90) {
+			 grade = "A+";
+			 if(score >= 96) {
+			 }else {
+			 grade = "A";
+			 }
+		}else if (score >= 80 && score > 90) {
 			 grade = "B";
 		}else if (score >= 70 && score > 80) {
 			 grade = "C";

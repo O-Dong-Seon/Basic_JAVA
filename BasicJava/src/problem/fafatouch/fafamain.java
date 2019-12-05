@@ -64,7 +64,7 @@ public class fafamain {
 			System.out.print("▒ 번호 >>");
 			// 사용자가 주문한 메인메뉴 번호
 			int mainNum = sc.nextInt();
-	
+			
 			System.out.println("▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒");
 			System.out.println("▒ 파파터치 주문 프로그램");
 			System.out.println("▒ ◆ 사이드메뉴 ◆");
