@@ -20,7 +20,17 @@ public class BoardDTO {
     
     
     
-    public BoardDTO(String title, String content, String writer) {
+    public BoardDTO(int bno) {
+		super();
+		this.bno = bno;
+	}
+
+
+
+
+
+
+	public BoardDTO(String title, String content, String writer) {
 		super();
 		this.title = title;
 		this.content = content;

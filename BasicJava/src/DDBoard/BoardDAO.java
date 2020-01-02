@@ -1,5 +1,8 @@
 package problem.DDBoard;
 
+import java.util.HashMap;
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
@@ -10,6 +13,7 @@ public class BoardDAO {
 //	PreparedStatement pstmt;
 //	ResultSet rs;
 //	ArrayList<BoardDTO> list = new ArrayList<>();
+
 	BoardDTO bDto;
 	int result;
 
@@ -19,7 +23,7 @@ public class BoardDAO {
 
 	// Mapper에 접근하기 위한 sqlSession
 	SqlSession sqlSession;
-
+	List<BoardDTO> list;
 	public void BoardInsert(String title, String content, String writer) {
 		sqlSession = sqlSessionFactory.openSession(true);
 
@@ -41,11 +45,90 @@ public class BoardDAO {
 
 	}
 
-	public void BoardUpdate(int bno, String title , String content , String writer) {
+	public void BoardUpdate(int bno, String title, String content, String writer) {
+		sqlSession = sqlSessionFactory.openSession(true);
 
+		HashMap<String, Object> map = new HashMap<>();
+
+		map.put("bno", bno);
+		map.put("title", title);
+		map.put("content", content);
+		map.put("writer", writer);
+
+		try {
+//			BoardDTO bDto = new BoardDTO(bno,title,content,writer);
+
+			result = sqlSession.update("BoardUpdate", map);
+
+			if (result > 0) {
+				System.out.println("게시판 수정이 완료되었습니다");
+			} else {
+				System.out.println("게시판 수정에 실패했습니다 처음부터 다시 입력해주세요");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sqlSession.close();
+		}
+	}
+
+	public void BoardDelete(int bno) {
+		sqlSession = sqlSessionFactory.openSession(true);
+
+//		HashMap<String,Integer> map = new HashMap<>();
+//		map.put("bno", bno);
+
+		try {
+			bDto = new BoardDTO(bno);
+			result = sqlSession.delete("BoardDelete", bDto);
+
+			if (result > 0) {
+				System.out.println("게시글이 삭제 되었습니다");
+			} else {
+				System.out.println("게시글 삭제가 되지않았습니다 다시 시도해주세요");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sqlSession.close();
+		}
+	}
+
+	public void BoardSelect() {
+		sqlSession = sqlSessionFactory.openSession();
+
+		try {
+			list = sqlSession.selectList("BoardSelect");
+			
+			for(BoardDTO line : list) {
+				System.out.println(line.toString());
+			}
+				
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sqlSession.close();
+		}
+	}
+	public void BoardSearch(String keyword) {
+	
+		sqlSession = sqlSessionFactory.openSession();
 		
 		
 		
+		try {
+			list = sqlSession.selectList("BoardSearch" , "%"+keyword+"%");
+			System.out.println("검색결과 총" + list.size()+"건의 게시글이 검색되었습니다");
+			for(BoardDTO line : list) {
+				System.out.println(line.toString());
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			sqlSession.close();
+		}
 		
 	}
 
