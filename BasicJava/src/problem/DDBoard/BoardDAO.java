@@ -24,6 +24,7 @@ public class BoardDAO {
 	// Mapper에 접근하기 위한 sqlSession
 	SqlSession sqlSession;
 	List<BoardDTO> list;
+
 	public void BoardInsert(String title, String content, String writer) {
 		sqlSession = sqlSessionFactory.openSession(true);
 
@@ -100,36 +101,34 @@ public class BoardDAO {
 
 		try {
 			list = sqlSession.selectList("BoardSelect");
-			
-			for(BoardDTO line : list) {
+
+			for (BoardDTO line : list) {
 				System.out.println(line.toString());
 			}
-				
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			sqlSession.close();
 		}
 	}
+
 	public void BoardSearch(String keyword) {
-	
+
 		sqlSession = sqlSessionFactory.openSession();
-		
-		
-		
 		try {
-			list = sqlSession.selectList("BoardSearch" , "%"+keyword+"%");
-			System.out.println("검색결과 총" + list.size()+"건의 게시글이 검색되었습니다");
-			for(BoardDTO line : list) {
+			list = sqlSession.selectList("BoardSearch", "%" + keyword + "%");
+			System.out.println("검색결과 총" + list.size() + "건의 게시글이 검색되었습니다");
+			for (BoardDTO line : list) {
 				System.out.println(line.toString());
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			sqlSession.close();
 		}
-		
+
 	}
 
 //	public void BoardInsert(BoardDTO bDto) {
