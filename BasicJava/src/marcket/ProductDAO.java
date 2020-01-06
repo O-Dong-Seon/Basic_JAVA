@@ -1,6 +1,5 @@
 package marcket;
 
-import java.awt.print.Printable;
 import java.util.HashMap;
 import java.util.List;
 
@@ -15,6 +14,7 @@ public class ProductDAO {
 	int result;
 	List<ProductDTO> list;
 	Boolean flag = false;
+//	int minus = 0;
 	// 제품 등록&추가 기능 작동시 기존에 등록된 제품인지 최초입고제품인지 판별하는 ㅣ능
 
 	public boolean pdtAlready(String pname) {
@@ -39,8 +39,9 @@ public class ProductDAO {
 		HashMap<String, Object> map = new HashMap<>();
 		map.put("pname", pname);
 		map.put("cnt", cnt);
+		map.put("flag", "plus");
 		try {
-			result = sqlSession.update("pdt.CntPlus", map);
+			result = sqlSession.update("pdt.cntchange", map);
 
 			if (result > 0) {
 				System.out.println("수량이 정상적으로 입고 되었습니다");
@@ -112,11 +113,11 @@ public class ProductDAO {
 
 	public void selectpdt() {
 		sqlSession = sqlSessionFactory.openSession();
-		
+
 		try {
 			list = sqlSession.selectList("pdt.select");
-			
-			for(ProductDTO line :list) {
+
+			for (ProductDTO line : list) {
 				System.out.println(line.toString());
 			}
 		} catch (Exception e) {
@@ -126,20 +127,68 @@ public class ProductDAO {
 		}
 
 	}
-	
+
 	public void searchpdt(String keyword) {
-	sqlSession = sqlSessionFactory.openSession();
-	
+		sqlSession = sqlSessionFactory.openSession();
+
 		try {
-			list = sqlSession.selectList("pdt.search","%"+keyword+"%");
-			System.out.println("검색결과 총" + list.size() +"건이 검색되었습니다");
-			for(ProductDTO line : list) {
+			list = sqlSession.selectList("pdt.search", "%" + keyword + "%");
+			System.out.println("검색결과 총" + list.size() + "건이 검색되었습니다");
+			for (ProductDTO line : list) {
 				System.out.println(line.toString());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
-			
+		} finally {
+
 		}
 	}
+
+	// 제품 전체조회(재고가 > 1)
+	public List<ProductDTO> selectUsepdt() {
+		int i = 1;
+		sqlSession = sqlSessionFactory.openSession(true);
+		try {
+			list = sqlSession.selectList("pdt.selectUse");
+			for (ProductDTO line : list) {
+				System.out.println(i +"\t"+line.toString());
+				i += 1;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sqlSession.close();
+		}
+		return list;  //제품이 1개 이상인것을 리턴시킴
+	}
+ 
+	// 상품 판매시 재고를 마이너스 하는 함수  
+	public void pdtcntMinus(String pname, int cnt) { // 타입이아니라 순서대로 들어오기때문에 이름이 달라도 상관없음
+		sqlSession = sqlSessionFactory.openSession(true);
+		HashMap<String, Object>map = new HashMap<>();
+		map.put("pname",pname);
+		map.put("cnt",cnt);
+		map.put("flag","minus");
+		
+		try {
+			sqlSession.update("pdt.cntchange", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			sqlSession.close();
+		}
+	}
+//	public void dashBoard() {
+//		sqlSession = sqlSessionFactory.openSession(true);
+//		
+//		try {
+//			list = sqlSession.selectList("sale.dashBoard");
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}finally {
+//			sqlSession.close();
+//		}
+//		
+//	}
 }
